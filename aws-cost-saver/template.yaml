@@ -32,10 +32,10 @@ Resources:
       ContainerDefinitions:
         - Name: MyAppContainer
           Essential: "true"
-          Image: nginxdemos/hello
+          Image: public.ecr.aws/n9g2a5y7/genetic-flask-gnuicorn
           PortMappings:
-            - ContainerPort: 80
-              HostPort: 80
+            - ContainerPort: 5000
+              HostPort: 5000
               Protocol: tcp
 
   ECSService:
@@ -51,7 +51,7 @@ Resources:
           Subnets: !Ref ECSServiceSubnets
       LoadBalancers:
         - ContainerName: MyAppContainer
-          ContainerPort: 80
+          ContainerPort: 5000
           TargetGroupArn: !Ref MainAppTargetGroup
       TaskDefinition: !Ref EcsTaskDefinition
 
@@ -63,9 +63,9 @@ Resources:
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
           Description: Permit HTTP
-          FromPort: 80
+          FromPort: 5000
           IpProtocol: tcp
-          ToPort: 80
+          ToPort: 5000
 
   MainAppTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -80,7 +80,7 @@ Resources:
       UnhealthyThresholdCount: 3
       Matcher:
         HttpCode: 200
-      Port: 80
+      Port: 5000
       TargetType: ip
       Protocol: HTTP
       TargetGroupAttributes:
@@ -195,7 +195,7 @@ Resources:
       EvaluationPeriods: 1
       MetricName: RequestCountPerTarget
       Namespace: AWS/ApplicationELB
-      Period: 120
+      Period: 1800
       Statistic: Sum
       Threshold: 1
 
